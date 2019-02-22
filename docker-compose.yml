@@ -1,0 +1,38 @@
+version: "3.6"
+services:
+    # database
+    postgres:
+      image: postgres:alpine
+      container_name: default-postgres
+      volumes:
+        - ./docker/data/postgres:/var/lib/postgresql/data
+      environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+        - POSTGRES_DB=default
+      ports:
+       - "54321:5432"
+
+    # The PHP webserver
+    nginx:
+      image: nginx:alpine
+      container_name: default-nginx
+      working_dir: /var/www
+      volumes:
+         - ./:/var/www
+         - ./docker/nginx/phpfpm.conf:/etc/nginx/conf.d/default.conf
+      ports:
+      - "8000:80"
+
+    # The PHP runtime
+    phpfpm:
+      environment:
+       APP_ENV: docker
+       PHP_IDE_CONFIG: serverName=phpfpm
+       XDEBUG_CONFIG: idekey=PHPSTORM
+      build: ./docker/php-fpm
+      container_name: default-phpfpm
+      working_dir: /var/www
+      volumes:
+       - ./:/var/www
+       - ./docker/php-fpm/php-ini-overrides.ini:/etc/php/7.2/fpm/conf.d/99-overrides.ini
