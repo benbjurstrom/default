@@ -13,6 +13,29 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('api')->prefix('v1')->namespace('Api\V1')->group(function () {
+
+    /*
+    |--------------------------------------------------------------------------
+    | Unauthenticated Routes
+    |--------------------------------------------------------------------------
+    |
+    |
+    */
+
+    //
+
+    /*
+    |--------------------------------------------------------------------------
+    | Authenticated Routes
+    |--------------------------------------------------------------------------
+    |
+    |
+    */
+
+    Route::middleware('auth:api')->group(function () {
+        Route::prefix('user')->namespace('User')->group(function () {
+            Route::get('/user', 'CurrentUserController@show')->name('currentUser');
+        });
+    });
 });
