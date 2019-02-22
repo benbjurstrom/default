@@ -23,7 +23,9 @@ Route::middleware('api')->prefix('v1')->namespace('Api\V1')->group(function () {
     |
     */
 
-    //
+    Route::prefix('auth')->namespace('Auth')->group(function () {
+        Route::post('login', 'TokenController@store')->name('auth.login');
+    });
 
     /*
     |--------------------------------------------------------------------------
@@ -34,8 +36,15 @@ Route::middleware('api')->prefix('v1')->namespace('Api\V1')->group(function () {
     */
 
     Route::middleware('auth:api')->group(function () {
-        Route::prefix('user')->namespace('User')->group(function () {
-            Route::get('/user', 'CurrentUserController@show')->name('currentUser');
+
+        Route::prefix('auth')->namespace('Auth')->group(function () {
+            Route::delete('logout', 'TokenController@destroy')->name('auth.logout');
+            Route::patch('refresh', 'TokenController@update')->name('auth.refresh');
         });
+
+        Route::prefix('user')->namespace('User')->group(function () {
+            Route::get('/', 'CurrentUserController@show')->name('currentUser');
+        });
+
     });
 });
