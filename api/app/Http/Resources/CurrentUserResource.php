@@ -18,7 +18,13 @@ class CurrentUserResource extends JsonResource
             'id'        => $this->id,
             'name'      => $this->name,
             'email'     => $this->email,
-            'gravatar'  => md5($this->email)
+            'gravatar'  => md5($this->email),
+            'roles'     => $this->whenLoaded('roles', function () {
+                return new RoleCollection($this->roles);
+            }),
+            'permissions' => $this->whenLoaded('permissions', function () {
+                return new PermissionCollection($this->getAllPermissions());
+            })
         ];
     }
 }

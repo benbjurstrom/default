@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Str;
 use Faker\Generator as Faker;
+use App\Models\User;
+use App\Models\Role;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,7 +16,7 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(App\Models\User::class, function (Faker $faker) {
+$factory->define(User::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
@@ -23,3 +25,17 @@ $factory->define(App\Models\User::class, function (Faker $faker) {
         'remember_token' => Str::random(10),
     ];
 });
+
+
+$factory->state(User::class, 'withRoles', [])
+    ->afterCreatingState(User::class, 'withRoles', function ($user, $faker) {
+
+        $roles = factory(Role::class, 3)
+            ->states(['withPermissions'])
+            ->create();
+
+        $roles->each(function($role) use ($user) {
+            $user->assignRole($role);
+        });
+
+    });

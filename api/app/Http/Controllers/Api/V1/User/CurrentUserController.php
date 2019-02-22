@@ -15,7 +15,9 @@ class CurrentUserController extends Controller
      */
     public function show(): JsonResponse
     {
-        return (new CurrentUserResource(auth()->user()))
+        $user = auth()->user();
+        $user->load(['roles', 'permissions']);
+        return (new CurrentUserResource($user))
             ->response()
             ->setStatusCode(200);
     }

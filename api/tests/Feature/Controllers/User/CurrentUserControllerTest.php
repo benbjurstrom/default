@@ -13,11 +13,15 @@ class CurrentUserControllerTest extends TestCase
      */
     public function testIndex()
     {
-        $user = factory(User::class)->create();
+        $user = factory(User::class)
+            ->states(['withRoles'])
+            ->create();
         auth()->login($user);
 
         $this->getJson(route('currentUser'))
             ->assertStatus(200)
-            ->assertJsonFragment((new CurrentUserResource($user))->toArray());
+            ->assertJsonFragment(['id' => $user->id])
+            ->assertJsonFragment(['id' => $user->roles->first()->id])
+            ->assertJsonFragment(['id' => $user->getAllPermissions()->first()->id]);
     }
 }
