@@ -1,8 +1,16 @@
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 const pkg = require('./package')
+require('dotenv').config()
 
 module.exports = {
   mode: 'spa',
+
+  /*
+  ** Global Middleware
+  */
+  router: {
+    middleware: ['auth']
+  },
 
   /*
   ** Headers of the page
@@ -40,7 +48,8 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '@/plugins/vuetify'
+    '@/plugins/vuetify',
+    '@/plugins/vee-validate.js'
   ],
 
   /*
@@ -48,13 +57,31 @@ module.exports = {
   */
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/auth',
+    '@nuxtjs/dotenv'
   ],
   /*
   ** Axios module configuration
   */
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
+    baseURL: process.env.API_URL
+  },
+
+  /*
+  ** Auth module configuration
+  */
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: process.env.API_URL + '/v1/auth/login', method: 'post', propertyName: 'access_token' },
+          logout: { url: process.env.API_URL + '/v1/auth/logout', method: 'delete' },
+          user: { url: process.env.API_URL + '/v1/user', method: 'get', propertyName: 'data' }
+        }
+      }
+    }
   },
 
   /*
@@ -72,14 +99,20 @@ module.exports = {
     /*
     ** You can extend webpack config here
     */
-    extend(config, ctx) {
+    extend (config, ctx) {
       // Run ESLint on save
       if (ctx.isDev && ctx.isClient) {
         config.module.rules.push({
           enforce: 'pre',
           test: /\.(js|vue)$/,
           loader: 'eslint-loader',
-          exclude: /(node_modules)/
+          exclude: /(node_modules)/,
+          options: {
+            emitError: true,
+            emitWarning: true,
+            failOnError: true,
+            failOnWarning: true
+          }
         })
       }
     }
