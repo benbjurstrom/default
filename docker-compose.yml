@@ -13,6 +13,17 @@ services:
       ports:
        - "54321:5432"
 
+    redis:
+      image: redis:4.0-alpine
+      container_name: default-redis
+      command: redis-server /usr/local/etc/redis/redis.conf
+      volumes:
+        - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+      ports:
+        - '6378:6379'
+      command: >
+        --requirepass secret
+
     # The PHP webserver
     nginx:
       image: nginx:alpine

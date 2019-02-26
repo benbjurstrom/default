@@ -34,15 +34,28 @@ class ForgotPasswordController extends Controller
     public function store(Request $request)
     {
         $data = $this->validate($request, [
-            'email'     => 'required|string|email|max:255|exists:users'
+            'email'     => 'required|string|email|max:255'
         ]);
 
-        $user  = (new User)->where('email', $data['email'])->firstOrFail();
-        $token = $this->broker()->createToken($user);
+        $user = (new User)
+            ->where('email', $data['email'])
+            ->first();
+
+        // silently fail if the user is not found for privacy reasons
+        if(!$user){
+            return response()
+                ->json(null, 202);
+        }
+
+        $this->broker()->deleteToken($user);
+        $token = $this
+            ->broker()
+            ->createToken($user);
 
         Mail::to($user)
             ->queue(new PasswordReset($user, $token));
 
-        return response()->json(null, 202);
+        return response()
+            ->json(null, 202);
     }
 }
