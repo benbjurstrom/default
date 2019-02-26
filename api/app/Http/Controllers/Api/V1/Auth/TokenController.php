@@ -4,23 +4,36 @@ namespace App\Http\Controllers\Api\V1\Auth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Validation\ValidationException;
 
 class TokenController extends Controller
 {
+    use AuthenticatesUsers;
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
+     * @throws ValidationException
+     * @throws \Throwable
      */
     public function store(Request $request)
     {
-        $credentials = request(['email', 'password']);
-
-        if (! $token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        if ($this->hasTooManyLoginAttempts($request)) {
+            $this->fireLockoutEvent($request);
+            $this->sendLockoutResponse($request);
         }
+        $this->incrementLoginAttempts($request);
+
+        $this->validateLogin($request);
+        throw_unless($this->attemptLogin($request), ValidationException::withMessages([
+            'email'    => ['The provided credentials are incorrect']
+        ]));
+
+        $credentials = request(['email', 'password']);
+        $token = auth()->attempt($credentials);
 
         return response()
             ->json([

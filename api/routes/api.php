@@ -25,6 +25,7 @@ Route::middleware('api')->prefix('v1')->namespace('Api\V1')->group(function () {
 
     Route::prefix('auth')->namespace('Auth')->group(function () {
         Route::post('login', 'TokenController@store')->name('auth.login');
+        Route::post('register', 'RegistrationController@store')->name('auth.register');
     });
 
     /*
