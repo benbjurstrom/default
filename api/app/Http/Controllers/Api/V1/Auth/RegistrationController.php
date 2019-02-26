@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Http\Resources\CurrentUserResource;
 use App\Models\User;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Validation\ValidationException;
@@ -12,9 +11,15 @@ use Hash;
 
 class RegistrationController extends Controller
 {
-    use AuthenticatesUsers;
-
-    protected $maxAttempts = 1;
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('throttle:5,5');
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -30,13 +35,6 @@ class RegistrationController extends Controller
                 'email'    => ['Registration is closed for new users']
             ]);
         }
-
-        if ($this->hasTooManyLoginAttempts($request)) {
-            $this->fireLockoutEvent($request);
-            $this->sendLockoutResponse($request);
-        }
-
-        $this->incrementLoginAttempts($request);
 
         $data = $this->validate($request, [
             'name'      => 'required|string|max:255',
