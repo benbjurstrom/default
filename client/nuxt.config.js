@@ -1,4 +1,3 @@
-const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 const pkg = require('./package')
 require('dotenv').config()
 
@@ -23,12 +22,7 @@ module.exports = {
       { hid: 'description', name: 'description', content: pkg.description }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      {
-        rel: 'stylesheet',
-        href:
-          'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons'
-      }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
 
@@ -40,15 +34,12 @@ module.exports = {
   /*
   ** Global CSS
   */
-  css: [
-    '~/assets/style/app.styl'
-  ],
+  css: [],
 
   /*
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '@/plugins/vuetify',
     '@/plugins/vee-validate.js'
   ],
 
@@ -59,7 +50,9 @@ module.exports = {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/auth',
-    '@nuxtjs/dotenv'
+    '@nuxtjs/dotenv',
+    // Doc: https://buefy.github.io/#/documentation
+    'nuxt-buefy'
   ],
   /*
   ** Axios module configuration
@@ -88,14 +81,6 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    transpile: ['vuetify/lib'],
-    plugins: [new VuetifyLoaderPlugin()],
-    loaders: {
-      stylus: {
-        import: ['~assets/style/variables.styl']
-      }
-    },
-
     /*
     ** You can extend webpack config here
     */

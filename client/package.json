@@ -22,8 +22,7 @@
     "nuxt": "^2.4.0",
     "vee-validate": "^2.1.7",
     "vee-validate-laravel": "^1.1.0",
-    "vuetify": "^1.5.0",
-    "vuetify-loader": "^1.2.0"
+    "nuxt-buefy": "^0.3.2"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^0.0.1",

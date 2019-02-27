@@ -1,116 +1,73 @@
 <template>
-  <v-app dark>
-    <v-navigation-drawer
-      v-model="drawer"
-      :mini-variant="miniVariant"
-      :clipped="clipped"
-      fixed
-      app
+  <div>
+    <nav
+      class="navbar header has-shadow is-primary"
+      role="navigation"
+      aria-label="main navigation"
     >
-      <v-list>
-        <v-list-tile
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
-          router
-          exact
+      <div class="navbar-brand">
+        <a
+          class="navbar-item"
+          href="/"
         >
-          <v-list-tile-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title v-text="item.title" />
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-    </v-navigation-drawer>
-    <v-toolbar
-      :clipped-left="clipped"
-      fixed
-      app
-    >
-      <v-toolbar-side-icon @click="drawer = !drawer" />
-      <v-btn
-        icon
-        @click.stop="miniVariant = !miniVariant"
-      >
-        <v-icon>{{ `chevron_${miniVariant ? 'right' : 'left'}` }}</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="clipped = !clipped"
-      >
-        <v-icon>web</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="fixed = !fixed"
-      >
-        <v-icon>remove</v-icon>
-      </v-btn>
-      <v-toolbar-title v-text="title" />
-      <v-spacer />
-      <v-btn
-        icon
-        @click.stop="rightDrawer = !rightDrawer"
-      >
-        <v-icon>menu</v-icon>
-      </v-btn>
-    </v-toolbar>
-    <v-content>
-      <v-container>
+          <img
+            src="~assets/buefy.png"
+            alt="Buefy"
+            height="28"
+          >
+        </a>
+
+        <div class="navbar-burger">
+          <span />
+          <span />
+          <span />
+        </div>
+      </div>
+    </nav>
+
+    <section class="main-content columns">
+      <aside class="column is-2 section">
+        <p class="menu-label is-hidden-touch">
+          General
+        </p>
+        <ul class="menu-list">
+          <li
+            v-for="(item, key) of items"
+            :key="key"
+          >
+            <nuxt-link
+              :to="item.to"
+              exact-active-class="is-active"
+            >
+              <b-icon :icon="item.icon" /> {{ item.title }}
+            </nuxt-link>
+          </li>
+        </ul>
+      </aside>
+
+      <div class="container column is-10">
         <nuxt />
-      </v-container>
-    </v-content>
-    <v-navigation-drawer
-      v-model="rightDrawer"
-      :right="right"
-      temporary
-      fixed
-    >
-      <v-list>
-        <v-list-tile @click.native="right = !right">
-          <v-list-tile-action>
-            <v-icon light>
-              compare_arrows
-            </v-icon>
-          </v-list-tile-action>
-          <v-list-tile-title>Switch drawer (click me)</v-list-tile-title>
-        </v-list-tile>
-      </v-list>
-    </v-navigation-drawer>
-    <v-footer
-      :fixed="fixed"
-      app
-    >
-      <span>&copy; 2019</span>
-    </v-footer>
-  </v-app>
+      </div>
+    </section>
+  </div>
 </template>
 
 <script>
 export default {
-  data() {
+  data () {
     return {
-      clipped: false,
-      drawer: false,
-      fixed: false,
       items: [
         {
-          icon: 'apps',
-          title: 'Welcome',
-          to: '/'
+          title: 'Home',
+          icon: 'home',
+          to: { name: 'index' }
         },
         {
-          icon: 'bubble_chart',
           title: 'Inspire',
-          to: '/inspire'
+          icon: 'lightbulb',
+          to: { name: 'inspire' }
         }
-      ],
-      miniVariant: false,
-      right: true,
-      rightDrawer: false,
-      title: 'Vuetify.js'
+      ]
     }
   }
 }

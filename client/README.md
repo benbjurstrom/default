@@ -1,6 +1,6 @@
 # client
 
-> Projectionist client
+> My lovely Nuxt.js project
 
 ## Build Setup
 
