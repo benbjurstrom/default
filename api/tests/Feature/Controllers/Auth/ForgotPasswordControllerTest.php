@@ -16,12 +16,12 @@ class ForgotPasswordControllerTest extends TestCase
     {
         app()->make('config')->set('mail.driver', 'log');
         $user = factory(User::class)->create();
-        $this->postJson(route('auth.password.reset'), [
+        $this->postJson(route('auth.password.email'), [
             'email' => $user->email
         ])->assertStatus(202);
 
         $this->assertDatabaseHas('password_resets', [
-            'email' => $user->email,
+            'email' => $user->email
         ]);
     }
 }

@@ -26,7 +26,9 @@ Route::middleware('api')->prefix('v1')->namespace('Api\V1')->group(function () {
     Route::prefix('auth')->namespace('Auth')->group(function () {
         Route::post('login', 'TokenController@store')->name('auth.login');
         Route::post('register', 'RegistrationController@store')->name('auth.register');
-        Route::post('password/reset', 'ForgotPasswordController@store')->name('auth.password.reset');
+        Route::post('password/email', 'ForgotPasswordController@store')->name('auth.password.email');
+        Route::patch('password/reset', 'ResetPasswordController@update')->name('auth.password.reset');
+        Route::get('password/reset', 'ResetPasswordController@index')->name('auth.password.validate');
     });
 
     /*

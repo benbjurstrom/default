@@ -3,16 +3,13 @@
 namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Mail\PasswordReset;
-use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
+use App\Services\PasswordService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use App\Models\User;
 use Mail;
 
 class ForgotPasswordController extends Controller
 {
-    use SendsPasswordResetEmails;
 
     /**
      * Create a new controller instance.
@@ -28,32 +25,18 @@ class ForgotPasswordController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  PasswordService $ps
      * @return \Illuminate\Http\JsonResponse
      * @throws ValidationException
+     * @throws \Throwable
      */
-    public function store(Request $request)
+    public function store(Request $request, PasswordService $ps)
     {
         $data = $this->validate($request, [
             'email'     => 'required|string|email|max:255'
         ]);
 
-        $user = (new User)
-            ->where('email', $data['email'])
-            ->first();
-
-        // silently fail if the user is not found for privacy reasons
-        if(!$user){
-            return response()
-                ->json(null, 202);
-        }
-
-        $this->broker()->deleteToken($user);
-        $token = $this
-            ->broker()
-            ->createToken($user);
-
-        Mail::to($user)
-            ->queue(new PasswordReset($user, $token));
+        $ps->sendForgotPasswordEmail($data['email']);
 
         return response()
             ->json(null, 202);
