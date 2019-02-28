@@ -1,17 +1,17 @@
 <template>
   <div class="columns is-centered">
     <div class="column is-half">
-      <Login />
+      <ForgotPassword />
     </div>
   </div>
 </template>
 <script>
-import Login from '~/components/auth/Login'
+import ForgotPassword from '~/components/auth/ForgotPassword'
 export default {
   auth: false,
   middleware: 'guest',
   components: {
-    Login
+    ForgotPassword
   }
 }
 </script>

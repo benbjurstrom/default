@@ -1,17 +1,17 @@
 <template>
   <div class="columns is-centered">
     <div class="column is-half">
-      <Login />
+      <Register />
     </div>
   </div>
 </template>
 <script>
-import Login from '~/components/auth/Login'
+import Register from '~/components/auth/Register'
 export default {
   auth: false,
   middleware: 'guest',
   components: {
-    Login
+    Register
   }
 }
 </script>

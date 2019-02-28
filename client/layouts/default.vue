@@ -1,7 +1,7 @@
 <template>
   <div>
     <nav
-      class="navbar header has-shadow is-primary"
+      class="navbar header"
       role="navigation"
       aria-label="main navigation"
     >
@@ -11,7 +11,7 @@
           href="/"
         >
           <img
-            src="~assets/buefy.png"
+            src="https://buefy.org/static/img/buefy.1d65c18.png"
             alt="Buefy"
             height="28"
           >
@@ -21,6 +21,12 @@
           <span />
           <span />
           <span />
+        </div>
+      </div>
+
+      <div class="navbar-menu">
+        <div class="navbar-end">
+          <Menu />
         </div>
       </div>
     </nav>
@@ -46,14 +52,18 @@
       </aside>
 
       <div class="container column is-10">
-        <nuxt />
+        <section class="section">
+          <nuxt />
+        </section>
       </div>
     </section>
   </div>
 </template>
 
 <script>
+import Menu from '~/components/Menu'
 export default {
+  components: { Menu },
   data () {
     return {
       items: [
