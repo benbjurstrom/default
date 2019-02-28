@@ -1,0 +1,7 @@
+$primary: #7957d5 !default;
+$info: #167df0 !default;
+$link: $primary !default;
+$link-focus-border: $primary !default;
+
+@import "../../node_modules/bulma";
+@import "../../node_modules/buefy/src/scss/buefy";

@@ -34,7 +34,9 @@ module.exports = {
   /*
   ** Global CSS
   */
-  css: [],
+  css: [
+    '@/assets/scss/app.scss'
+  ],
 
   /*
   ** Plugins to load before mounting the App
@@ -51,9 +53,20 @@ module.exports = {
     '@nuxtjs/axios',
     '@nuxtjs/auth',
     '@nuxtjs/dotenv',
+    '@nuxtjs/style-resources',
     // Doc: https://buefy.github.io/#/documentation
-    'nuxt-buefy'
+    ['nuxt-buefy', {
+      css: false,
+      materialDesignIcons: true
+    }]
   ],
+
+  styleResources: {
+    scss: [
+      './assets/scss/*.scss'
+    ]
+  },
+
   /*
   ** Axios module configuration
   */
