@@ -15,11 +15,12 @@ class CurrentUserResource extends JsonResource
     public function toArray($request = null)
     {
         return [
-            'id'        => $this->id,
-            'name'      => $this->name,
-            'email'     => $this->email,
-            'gravatar'  => md5($this->email),
-            'roles'     => $this->whenLoaded('roles', function () {
+            'id'            => $this->id,
+            'name'          => $this->name,
+            'email'         => $this->email,
+            'gravatar'      => md5($this->email),
+            'verified'      => optional($this->email_verified_at)->toDateString(),
+            'roles'         => $this->whenLoaded('roles', function () {
                 return new RoleCollection($this->roles);
             }),
             'permissions' => $this->whenLoaded('permissions', function () {

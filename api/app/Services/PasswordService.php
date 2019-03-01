@@ -4,10 +4,12 @@ namespace App\Services;
 
 use App\Mail\PasswordChange;
 use App\Mail\PasswordReset;
+use App\Mail\EmailVerification;
 use App\Models\User;
 use Illuminate\Validation\ValidationException;
 use Mail;
 use Password;
+use URL;
 
 class PasswordService
 {
@@ -31,19 +33,25 @@ class PasswordService
     }
 
     /**
-     * @param string $email
+     * @param User $user
      * @throws \Throwable
      */
-    public function sendForgotPasswordEmail($email){
-        $user = (new User)->where('email', $email)->first();
-
-        // silently fail if the user is not found for privacy reasons
-        if(!$user) return;
-
+    public function sendForgotPasswordEmail(User $user){
         Password::deleteToken($user);
         $token = Password::createToken($user);
 
         Mail::to($user)->queue(new PasswordReset($user, $token));
+    }
+
+    /**
+     * @param User $user
+     * @throws \Throwable
+     */
+    public function sendVerificationEmail(User $user) {
+        $this->validateUserNotVerified($user);
+        $sig = $this->getEmailVerificationSignature($user);
+
+        Mail::to($user)->queue(new EmailVerification($user, $sig));
     }
 
     /**
@@ -63,12 +71,31 @@ class PasswordService
     }
 
     /**
+     * @param User $user
+     * @return string
+     */
+    protected function getEmailVerificationSignature(User $user) {
+        $route = URL::signedRoute('auth.email.verify', ['id' => $user->id]);
+        return substr($route, strrpos($route, '=') + 1);
+    }
+
+    /**
      * @param bool $subject
      * @throws \Throwable
      */
-    public function validate($subject){
+    protected function validate($subject) {
         throw_unless($subject, ValidationException::withMessages([
             'token'    => ['The given credentials are incorrect']
+        ]));
+    }
+
+    /**
+     * @param User $user
+     * @throws \Throwable
+     */
+    protected function validateUserNotVerified(User $user){
+        throw_if($user->hasVerifiedEmail(), ValidationException::withMessages([
+            'id'    => ['The current user email address is already verified.']
         ]));
     }
 }

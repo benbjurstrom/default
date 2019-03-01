@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Services\PasswordService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -36,9 +37,13 @@ class ForgotPasswordController extends Controller
             'email'     => 'required|string|email|max:255'
         ]);
 
-        $ps->sendForgotPasswordEmail($data['email']);
+        $user = (new User)->where('email', $data['email'])->first();
 
-        return response()
-            ->json(null, 202);
+        // silently skip if the user is not found for privacy reasons
+        if($user) {
+            $ps->sendForgotPasswordEmail($user);
+        }
+
+        return response()->json(null, 202);
     }
 }

@@ -33,22 +33,35 @@ Route::middleware('api')->prefix('v1')->namespace('Api\V1')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Authenticated Routes
+    | Authenticated Unverified Routes
     |--------------------------------------------------------------------------
     |
     |
     */
 
     Route::middleware('auth:api')->group(function () {
-
         Route::prefix('auth')->namespace('Auth')->group(function () {
             Route::delete('logout', 'TokenController@destroy')->name('auth.logout');
             Route::patch('refresh', 'TokenController@update')->name('auth.refresh');
+            Route::post('email/resend', 'EmailVerificationController@store')->name('auth.email.resend');
+            Route::patch('email/verify', 'EmailVerificationController@update')->name('auth.email.verify');
         });
 
         Route::prefix('user')->namespace('User')->group(function () {
             Route::get('/', 'CurrentUserController@show')->name('currentUser');
         });
+    });
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Authenticated Verified Routes
+    |--------------------------------------------------------------------------
+    |
+    |
+    */
+
+    Route::middleware('verified')->group(function () {
 
     });
 });
