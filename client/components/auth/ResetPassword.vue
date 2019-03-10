@@ -1,9 +1,8 @@
 <template>
   <div>
-    <h3 class="title">
+    <h1 class="title">
       Change Password
-    </h3>
-    <loader v-if="loading" />
+    </h1>
     <form @submit.prevent="updatePassword">
       <b-field
         disabled
@@ -50,11 +49,7 @@
   </div>
 </template>
 <script>
-import Loader from '~/components/Loader'
 export default {
-  components: {
-    Loader
-  },
   props: {
     email: {
       required: true,
@@ -67,7 +62,6 @@ export default {
   },
   data () {
     return {
-      loading: false,
       form: {
         email: null,
         password: null,
@@ -80,27 +74,22 @@ export default {
   },
   methods: {
     async updatePassword () {
-      let valid = await this.$validator.validateAll()
-      if (valid) {
-        try {
-          this.loading = true
-          await this.$axios.patch('/v1/auth/password/reset', {
+      try {
+        await this.$axios.patch('/v1/auth/password/reset',
+          {
             email: this.email,
             token: this.token,
             password: this.form.password
-          })
-
-          await this.$auth.loginWith('local', { data: this.form })
-          this.$router.push('/')
-        } catch (e) {
-          if (e.response && e.response.status === 422) {
-            this.$setLaravelValidationErrorsFromResponse(e.response.data)
-          } else {
-            return this.$nuxt.error({ statusCode: 500, message: e.message })
+          },
+          {
+            container: this.$el,
+            validator: this.$validator
           }
-        } finally {
-          this.loading = false
-        }
+        )
+        await this.$auth.loginWith('local', { data: this.form })
+        this.$router.push('/')
+      } catch (e) {
+        console.log(e)
       }
     }
   }

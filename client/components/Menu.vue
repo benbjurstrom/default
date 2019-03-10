@@ -41,9 +41,7 @@ export default {
   },
   methods: {
     async logout () {
-      this.$emit('loading', true)
       await this.$auth.logout()
-      this.$emit('loading', false)
     }
   }
 }

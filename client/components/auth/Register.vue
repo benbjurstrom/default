@@ -1,6 +1,8 @@
 <template>
   <div>
-    <loader v-if="loading" />
+    <h1 class="title">
+      Register New Account
+    </h1>
     <form @submit.prevent="register">
       <b-field
         label="Name"
@@ -53,14 +55,9 @@
   </div>
 </template>
 <script>
-import Loader from '~/components/Loader'
 export default {
-  components: {
-    Loader
-  },
   data () {
     return {
-      loading: false,
       form: {
         name: null,
         email: null,
@@ -70,18 +67,20 @@ export default {
   },
   methods: {
     async register () {
-      const valid = await this.$validator.validateAll()
-      if (valid) {
-        try {
-          this.loading = true
-          await this.$axios.post('/v1/auth/register', this.form)
-          await this.$auth.loginWith('local', { data: this.form })
-          this.$router.push('/')
-        } catch (e) {
-          this.$setLaravelValidationErrorsFromResponse(e.response.data)
-        } finally {
-          this.loading = false
-        }
+      try {
+        await this.$axios.post('/v1/auth/register', this.form, {
+          container: this.$el,
+          validator: this.$validator
+        })
+
+        await this.$auth.loginWith('local', { data: this.form },
+          {
+            container: this.$el,
+            validator: this.$validator
+          })
+        this.$router.push('/')
+      } catch (e) {
+        console.log(e)
       }
     }
   }

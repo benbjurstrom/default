@@ -1,9 +1,9 @@
 <template>
   <div>
     <form v-if="!success" @submit.prevent="reset">
-      <h3 class="title is-3">
+      <h1 class="title">
         Forgot Password
-      </h3>
+      </h1>
       <b-field
         label="Email"
         :type="{'is-danger': errors.has('email')}"
@@ -32,19 +32,22 @@
       </div>
     </form>
     <div v-else>
-      <h3 class="title is-3">
+      <h3 class="title">
         Success!
       </h3>
-      <p class="title is-7">
+      <p class="">
         If the email {{ email }} belongs to an active account a password reset link will be dispatched.
       </p>
-      <a
-        href="#"
-        class="is-size-7"
-        @click.prevent="$router.push('/login')"
-      >
-        Back to login
-      </a>
+      <br>
+      <p>
+        <a
+          href="#"
+          class="is-size-7"
+          @click.prevent="$router.push('/login')"
+        >
+          Back to login
+        </a>
+      </p>
     </div>
   </div>
 </template>
@@ -53,23 +56,20 @@ export default {
   data () {
     return {
       email: '',
-      loading: false,
       success: false
     }
   },
   methods: {
     async reset () {
-      const isValid = await this.$validator.validateAll()
-      if (isValid) {
-        try {
-          this.loading = true
-          await this.$axios.post('v1/auth/password/email', { email: this.email })
-          this.success = true
-        } catch (e) {
-          this.$setLaravelValidationErrorsFromResponse(e.response.data)
-        } finally {
-          this.loading = false
-        }
+      try {
+        await this.$axios.post('v1/auth/password/email', { email: this.email },
+          {
+            container: this.$el,
+            validator: this.$validator
+          })
+        this.success = true
+      } catch (e) {
+        console.log(e)
       }
     }
   }

@@ -8,7 +8,7 @@ module.exports = {
   ** Global Middleware
   */
   router: {
-    middleware: ['auth']
+    middleware: ['auth', 'verified']
   },
 
   /*
@@ -42,7 +42,8 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '@/plugins/vee-validate.js'
+    '@/plugins/vee-validate.js',
+    '@/plugins/axios.js'
   ],
 
   /*

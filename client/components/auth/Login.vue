@@ -1,6 +1,8 @@
 <template>
   <div>
-    <loader v-if="loading" />
+    <h1 class="title">
+      Login
+    </h1>
     <form @submit.prevent="login">
       <b-field
         label="Email"
@@ -36,7 +38,7 @@
           <a
             href="#"
             class="is-size-7"
-            @click.prevent="$router.push('/password/reset')"
+            @click.prevent="$router.push('/auth/reset')"
           >
             Forgot Password?
           </a>
@@ -47,7 +49,7 @@
       <a
         href="#"
         class="is-size-7"
-        @click.prevent="$router.push('/register')"
+        @click.prevent="$router.push('/auth/register')"
       >
         Don't have an account? Register Now!
       </a>
@@ -55,31 +57,26 @@
   </div>
 </template>
 <script>
-import Loader from '~/components/Loader'
 export default {
   components: {
-    Loader
+    //
   },
   data () {
     return {
       email: '',
-      password: '',
-      loading: false
+      password: ''
     }
   },
   methods: {
     async login () {
-      let valid = await this.$validator.validateAll()
-      if (valid) {
-        try {
-          this.loading = true
-          await this.$auth.loginWith('local', { data: { email: this.email, password: this.password } })
-          this.$router.push('/')
-        } catch (e) {
-          this.$setLaravelValidationErrorsFromResponse(e.response.data)
-        } finally {
-          this.loading = false
-        }
+      try {
+        await this.$auth.loginWith('local', { data: { email: this.email, password: this.password },
+          container: this.$el,
+          validator: this.$validator
+        })
+        this.$router.push('/')
+      } catch (e) {
+        console.error(e)
       }
     }
   }
