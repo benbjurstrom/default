@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Models\AdminUser;
 
-class UsersTableSeeder extends Seeder
+class AdminUsersTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.

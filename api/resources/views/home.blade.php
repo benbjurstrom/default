@@ -15,7 +15,8 @@
                     @endif
 
                     You are logged in!<br>
-                        <a href="/horizon" target="_blank">horizon</a>
+                        <a href="/horizon" target="_blank">Horizon</a><br>
+                        <a href="/telescope" target="_blank">Telescope</a><br>
                 </div>
             </div>
         </div>
