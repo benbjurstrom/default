@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'middleware' => ['web'],
+    'middleware' => ['web', 'auth:web'],
 
     /*
     |--------------------------------------------------------------------------
@@ -126,7 +126,7 @@ return [
     */
 
     'environments' => [
-        'production' => [
+        'admin' => [
             'supervisor-1' => [
                 'connection' => 'redis',
                 'queue' => ['default'],

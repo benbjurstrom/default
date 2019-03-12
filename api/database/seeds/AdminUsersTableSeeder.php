@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Models\User;
+use App\Models\AdminUser;
 
 class UsersTableSeeder extends Seeder
 {
@@ -12,10 +12,10 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        $user = factory(User::class)
-            ->states(['withRoles'])
+        $user = factory(AdminUser::class)
             ->create([
-                'email' => 'user@test.com',
+                'name'  => 'Admin User',
+                'email' => 'admin@test.com',
                 'password' => bcrypt('123')
             ]);
     }
