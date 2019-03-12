@@ -65,6 +65,7 @@ services:
       container_name: default-phpfpm-admin
       depends_on: [redis, postgres]
       environment:
+        APP_ENV: admin
         LARAVEL_HORIZON: "true"
       volumes:
        - ./api:/var/www

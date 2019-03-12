@@ -35,11 +35,12 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
-        $this->mapApiRoutes();
+        if(app()->environment() === 'admin'){
+            $this->mapWebRoutes();
+        }else{
+            $this->mapApiRoutes();
+        }
 
-        $this->mapWebRoutes();
-
-        //
     }
 
     /**
