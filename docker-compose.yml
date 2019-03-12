@@ -24,26 +24,47 @@ services:
       command: >
         --requirepass secret
 
-    # The PHP webserver
-    nginx:
+    # The php api webserver
+    nginx-api:
+      container_name: default-nginx-api
       image: nginx:alpine
-      container_name: default-nginx
       working_dir: /var/www
       volumes:
          - ./api:/var/www
-         - ./docker/nginx/phpfpm.conf:/etc/nginx/conf.d/default.conf
+         - ./docker/nginx/api.conf:/etc/nginx/conf.d/default.conf
       ports:
       - "8000:80"
 
-    # The PHP runtime
-    phpfpm:
+    # The php api runtime
+    phpfpm-api:
+      container_name: default-phpfpm-api
+      build: ./docker/phpfpm
+      image: phpfpm
       environment:
-       APP_ENV: docker
        PHP_IDE_CONFIG: serverName=phpfpm
        XDEBUG_CONFIG: idekey=PHPSTORM
-      build: ./docker/php-fpm
-      container_name: default-phpfpm
       working_dir: /var/www
       volumes:
        - ./api:/var/www
-       - ./docker/php-fpm/php-ini-overrides.ini:/etc/php/7.2/fpm/conf.d/99-overrides.ini
+
+    # The php admin webserver
+    nginx-admin:
+     container_name: default-nginx-admin
+     image: nginx:alpine
+     depends_on: [phpfpm-admin]
+     working_dir: /var/www
+     volumes:
+        - ./api:/var/www
+        - ./docker/nginx/admin.conf:/etc/nginx/conf.d/default.conf
+     ports:
+     - "8001:80"
+
+    # The php admin runtime
+    phpfpm-admin:
+      build: ./docker/admin
+      container_name: default-phpfpm-admin
+      depends_on: [redis, postgres]
+      environment:
+        LARAVEL_HORIZON: "true"
+      volumes:
+       - ./api:/var/www
