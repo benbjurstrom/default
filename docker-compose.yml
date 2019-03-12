@@ -20,9 +20,16 @@ services:
       volumes:
         - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
       ports:
-        - '6378:6379'
+        - "6378:6379"
       command: >
         --requirepass secret
+
+    mailhog:
+      container_name: default-mailhog
+      image: mailhog/mailhog:latest
+      ports:
+        - "8025:8025"
+        - "1025:1025"
 
     # The php api webserver
     nginx-api:

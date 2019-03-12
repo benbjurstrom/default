@@ -41,7 +41,7 @@ class PasswordReset extends Mailable
      */
     public function build()
     {
-        $url = url(config('app.client_url') . '/password/reset/' . $this->token . '?email=' . $this->user->email);
+        $url = url(config('app.client_url') . '/auth/reset/' . $this->token . '?email=' . $this->user->email);
         return $this->subject('Password Reset')
             ->markdown('emails.password.reset')
             ->with([
