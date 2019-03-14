@@ -43,7 +43,7 @@ class PasswordReset extends Mailable
     {
         $url = url(config('app.client_url') . '/auth/reset/' . $this->token . '?email=' . $this->user->email);
         return $this->subject('Password Reset')
-            ->markdown('emails.password.reset')
+            ->markdown('emails.auth.reset')
             ->with([
                 'url' => $url
             ]);

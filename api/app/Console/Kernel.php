@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\Heartbeat;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -24,6 +25,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->job(new Heartbeat())->everyMinute();
         $schedule->command('telescope:prune')->daily();
     }
 

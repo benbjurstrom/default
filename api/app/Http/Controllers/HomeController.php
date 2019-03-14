@@ -23,6 +23,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $heartbeat = auth()->user()->updated_at;
+        return view('home', compact('heartbeat'));
     }
 }

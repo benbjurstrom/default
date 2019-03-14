@@ -18,6 +18,8 @@
                         <a href="/horizon" target="_blank">Horizon</a><br>
                         <a href="/telescope" target="_blank">Telescope</a><br>
                         <a href="http://localhost:8025" target="_blank">Mailhog</a><br>
+                        <hr>
+                    Last heartbeat: {{ $heartbeat->toString() }}
                 </div>
             </div>
         </div>

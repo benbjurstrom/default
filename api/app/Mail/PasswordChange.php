@@ -34,6 +34,6 @@ class PasswordChange extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.password.change');
+        return $this->markdown('emails.auth.change');
     }
 }
