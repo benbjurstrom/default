@@ -17,14 +17,19 @@
           >
         </a>
 
-        <div class="navbar-burger">
+        <div
+          class="navbar-burger"
+          :class="{ 'is-active' : showNav }"
+          @click="showNav = !showNav"
+        >
           <span />
           <span />
           <span />
         </div>
       </div>
 
-      <div class="navbar-menu">
+      <div class="navbar-menu" :class="{ 'is-active' : showNav }">
+        <div class="navbar-start" />
         <div class="navbar-end">
           <Menu />
         </div>
@@ -32,25 +37,6 @@
     </nav>
 
     <section class="main-content columns">
-      <aside class="column is-2 section">
-        <p class="menu-label is-hidden-touch">
-          General
-        </p>
-        <ul class="menu-list">
-          <li
-            v-for="(item, key) of items"
-            :key="key"
-          >
-            <nuxt-link
-              :to="item.to"
-              exact-active-class="is-active"
-            >
-              <b-icon :icon="item.icon" /> {{ item.title }}
-            </nuxt-link>
-          </li>
-        </ul>
-      </aside>
-
       <div class="container column is-10">
         <section class="section">
           <nuxt />
@@ -66,18 +52,7 @@ export default {
   components: { Menu },
   data () {
     return {
-      items: [
-        {
-          title: 'Home',
-          icon: 'home',
-          to: { name: 'index' }
-        },
-        {
-          title: 'Inspire',
-          icon: 'lightbulb',
-          to: { name: 'inspire' }
-        }
-      ]
+      showNav: false
     }
   }
 }

@@ -19,7 +19,7 @@ export default {
   methods: {
     async resend () {
       try {
-        await this.$axios.post('v1/auth/password/email', {
+        await this.$axios.post('v1/auth/email/resend', {
           email: this.email
         }, {
           container: this.$el,
