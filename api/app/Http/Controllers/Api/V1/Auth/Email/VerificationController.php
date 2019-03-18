@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Auth\Email;
 
-use App\Services\PasswordService;
+use App\Services\AuthService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
@@ -26,14 +26,14 @@ class VerificationController extends Controller
     /**
      * Resend the email verification notification.
      *
-     * @param  PasswordService  $ps
+     * @param  AuthService  $as
      * @return \Illuminate\Http\Response
      * @throws \Throwable
      */
-    public function index(PasswordService $ps)
+    public function index(AuthService $as)
     {
         $user = auth()->user();
-        $ps->sendVerificationEmail($user);
+        $as->sendVerificationEmail($user);
 
         return response()->json(null, 201);
     }
@@ -42,11 +42,11 @@ class VerificationController extends Controller
     /**
      * Mark the authenticated user's email address as verified.
      *
-     * @param  PasswordService  $ps
+     * @param  AuthService  $as
      * @return \Illuminate\Http\Response
      * @throws \Throwable
      */
-    public function update(PasswordService $ps)
+    public function update(AuthService $as)
     {
         $user = auth()->user();
         if (!$user->hasVerifiedEmail() && $user->markEmailAsVerified()) {

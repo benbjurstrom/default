@@ -4,7 +4,7 @@ namespace Tests\Feature\Controllers\Auth\Email;
 
 use App\Mail\EmailVerification;
 use App\Models\User;
-use App\Services\PasswordService;
+use App\Services\AuthService;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -35,7 +35,7 @@ class VerificationControllerTest extends TestCase
      */
     public function testVerifyWhereUnverified()
     {
-        $ps = new PasswordService();
+        $as = new AuthService();
 
         $user = factory(User::class)->create([
             'email_verified_at' => null
@@ -43,7 +43,7 @@ class VerificationControllerTest extends TestCase
         $this->assertFalse($user->hasVerifiedEmail());
 
         auth()->login($user);
-        $token = $ps->getEmailVerificationSignature($user);
+        $token = $as->getEmailVerificationSignature($user);
 
         $this->patchJson(route('auth.email.verify.update', [
             'signature' => $token,

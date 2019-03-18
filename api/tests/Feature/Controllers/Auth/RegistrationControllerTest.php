@@ -2,10 +2,12 @@
 
 namespace Tests\Feature\Controllers\Auth;
 
+use App\Mail\EmailVerification;
 use App\Models\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Mail;
 
 class RegistrationControllerTest extends TestCase
 {
@@ -14,6 +16,8 @@ class RegistrationControllerTest extends TestCase
      */
     public function testStore()
     {
+        Mail::fake();
+
         $password = str_random(12);
         $user = factory(User::class)->make([
             'password' => bcrypt($password)
@@ -29,5 +33,7 @@ class RegistrationControllerTest extends TestCase
             'name' => $user->name,
             'email' => $user->email,
         ]);
+
+        Mail::assertQueued(EmailVerification::class);
     }
 }

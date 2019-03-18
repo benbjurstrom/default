@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\V1\Auth\Email;
 
 use App\Http\Resources\CurrentUserResource;
 use App\Mail\Auth\EmailChangeVerification;
-use App\Services\PasswordService;
+use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -89,7 +89,7 @@ class ChangeController extends Controller
      * @return JsonResponse
      * @throws
      */
-    public function update(Request $request, PasswordService $as)
+    public function update(Request $request, AuthService $as)
     {
         $data = $this->validate($request, [
             'signature'      => 'required|string|size:64',

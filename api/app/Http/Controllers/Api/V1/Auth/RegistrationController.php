@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Http\Resources\CurrentUserResource;
 use App\Models\User;
+use App\Services\AuthService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Validation\ValidationException;
@@ -25,10 +26,11 @@ class RegistrationController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  AuthService $as
      * @return \Illuminate\Http\JsonResponse
-     * @throws ValidationException
+     * @throws \Throwable
      */
-    public function store(Request $request)
+    public function store(Request $request, AuthService $as)
     {
         if(!config('auth.registration')){
             ValidationException::withMessages([
@@ -47,6 +49,8 @@ class RegistrationController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+        $as->sendVerificationEmail($user);
 
         return (new CurrentUserResource($user))
             ->response()

@@ -11,7 +11,7 @@ use Mail;
 use Password;
 use URL;
 
-class PasswordService
+class AuthService
 {
     /**
      * @param array $credentials

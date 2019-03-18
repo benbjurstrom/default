@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Auth\Password;
 
-use App\Services\PasswordService;
+use App\Services\AuthService;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -28,19 +28,19 @@ class ResetController extends Controller
      * Display the specified resource.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  PasswordService $ps
+     * @param  AuthService $as
      * @return \Illuminate\Http\JsonResponse
      * @throws ValidationException
      * @throws \Throwable
      */
-    public function index(Request $request, PasswordService $ps)
+    public function index(Request $request, AuthService $as)
     {
         $data = $this->validate($request, [
             'email'     => 'required|string|email|max:255',
             'token'     => 'required|string|size:64',
         ]);
 
-        $user = $ps->getTokenUser($data['email'], $data['token']);
+        $user = $as->getTokenUser($data['email'], $data['token']);
 
         return response()
             ->json(null, 200);
@@ -50,12 +50,12 @@ class ResetController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  PasswordService $ps
+     * @param  AuthService $as
      * @return \Illuminate\Http\JsonResponse
      * @throws ValidationException
      * @throws \Throwable
      */
-    public function store(Request $request, PasswordService $ps)
+    public function store(Request $request, AuthService $as)
     {
         $data = $this->validate($request, [
             'email'     => 'required|string|email|max:255'
@@ -65,7 +65,7 @@ class ResetController extends Controller
 
         // silently skip if the user is not found for privacy reasons
         if($user) {
-            $ps->sendForgotPasswordEmail($user);
+            $as->sendForgotPasswordEmail($user);
         }
 
         return response()->json(null, 202);
@@ -75,12 +75,12 @@ class ResetController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  PasswordService $ps
+     * @param  AuthService $as
      * @return \Illuminate\Http\JsonResponse
      * @throws ValidationException
      * @throws \Throwable
      */
-    public function update(Request $request, PasswordService $ps)
+    public function update(Request $request, AuthService $as)
     {
         $data = $this->validate($request, [
             'email'     => 'required|string|email|max:255',
@@ -88,7 +88,7 @@ class ResetController extends Controller
             'password'  => 'required|string|min:8',
         ]);
 
-        $user = $ps->updatePasswordFromToken($data);
+        $user = $as->updatePasswordFromToken($data);
 
         return response()
             ->json(null, 200);
