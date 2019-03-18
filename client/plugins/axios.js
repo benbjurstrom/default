@@ -69,14 +69,19 @@ export default function ({ $axios }) {
         return Promise.reject(e)
       }
 
-      Toast.open({
-        message: _.get(e, 'response.data.message'),
-        type: 'is-danger'
-      })
+      showErrorMessage(status, e.response)
 
       return Promise.reject(e)
     }
   )
+}
+
+function showErrorMessage (status, response) {
+  const message = _.get(response, 'data.message') ? _.get(response, 'data.message') : _.get(response, 'data.exception')
+  Toast.open({
+    message: status + ': ' + message,
+    type: 'is-danger'
+  })
 }
 
 function showValidationErrors (validator, errorResponseData) {

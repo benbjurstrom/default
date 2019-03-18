@@ -11,7 +11,7 @@
           href="/"
         >
           <img
-            src="https://buefy.org/static/img/buefy.1d65c18.png"
+            src="~/assets/viga.png"
             alt="Buefy"
             height="28"
           >

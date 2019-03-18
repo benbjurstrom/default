@@ -9,7 +9,7 @@
   </div>
 </template>
 <script>
-import Reset from '~/components/auth/ResetPassword'
+import Reset from '~/components/auth/password/Reset'
 export default {
   components: {
     Reset

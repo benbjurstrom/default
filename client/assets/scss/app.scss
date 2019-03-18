@@ -1,7 +1,9 @@
-$primary: #7957d5 !default;
+$primary: #210C3E !default;
 $info: #167df0 !default;
-$link: $primary !default;
+$link: #F14625 !default;
 $link-focus-border: $primary !default;
+$input-focus-border-color: $primary !default;
+$input-focus-box-shadow-color: rgba($primary, 0.25) !default
 
 @import "../../node_modules/bulma";
 @import "../../node_modules/buefy/src/scss/buefy";

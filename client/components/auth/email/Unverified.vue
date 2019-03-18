@@ -1,13 +1,17 @@
 <template>
-  <div>
-    <h1 class="title">
-      Email Verification Required
-    </h1>
-    <p>
-      Before proceeding please check your email ({{ email }}) for a verification link. If you did not receive the email
-      <a href="#" @click.prevent="resend()">click here to request another</a>.
-    </p>
-  </div>
+  <article class="message is-primary">
+    <div class="message-header">
+      <p>
+        Email Verification Required
+      </p>
+    </div>
+    <div class="message-body content">
+      <p>
+        Before proceeding please check your email ({{ email }}) for a verification link.
+      </p>
+      <a class="button is-small" @click.prevent="resend">Resend Email</a>
+    </div>
+  </article>
 </template>
 <script>
 export default {
@@ -19,9 +23,7 @@ export default {
   methods: {
     async resend () {
       try {
-        await this.$axios.post('v1/auth/email/resend', {
-          email: this.email
-        }, {
+        await this.$store.dispatch('auth/email/resendVerification', {
           container: this.$el,
           validator: this.$validator
         })

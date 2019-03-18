@@ -6,7 +6,7 @@
   </div>
 </template>
 <script>
-import ForgotPassword from '~/components/auth/ForgotPassword'
+import ForgotPassword from '~/components/auth/password/Forgot'
 export default {
   auth: false,
   middleware: 'guest',

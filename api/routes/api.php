@@ -24,11 +24,14 @@ Route::middleware('api')->prefix('v1')->namespace('Api\V1')->group(function () {
     */
 
     Route::prefix('auth')->namespace('Auth')->group(function () {
-        Route::post('login', 'TokenController@store')->name('auth.login');
+        Route::post('token', 'TokenController@store')->name('auth.token.store');
         Route::post('register', 'RegistrationController@store')->name('auth.register');
-        Route::post('password/email', 'ForgotPasswordController@store')->name('auth.password.email');
-        Route::patch('password/reset', 'ResetPasswordController@update')->name('auth.password.reset');
-        Route::get('password/reset', 'ResetPasswordController@index')->name('auth.password.validate');
+
+        Route::prefix('password')->namespace('Password')->group(function () {
+            Route::post('reset', 'ResetController@store')->name('auth.password.reset.store');
+            Route::patch('reset', 'ResetController@update')->name('auth.password.reset.update');
+            Route::get('reset', 'ResetController@index')->name('auth.password.reset.index');
+        });
     });
 
     /*
@@ -41,14 +44,15 @@ Route::middleware('api')->prefix('v1')->namespace('Api\V1')->group(function () {
 
     Route::middleware('auth:api')->group(function () {
         Route::prefix('auth')->namespace('Auth')->group(function () {
-            Route::delete('logout', 'TokenController@destroy')->name('auth.logout');
-            Route::patch('refresh', 'TokenController@update')->name('auth.refresh');
-            Route::post('email/resend', 'EmailVerificationController@store')->name('auth.email.resend');
-            Route::patch('email/verify', 'EmailVerificationController@update')->name('auth.email.verify');
-        });
+            Route::delete('token', 'TokenController@destroy')->name('auth.token.destroy');
+            Route::patch('token', 'TokenController@update')->name('auth.token.update');
 
-        Route::prefix('user')->namespace('User')->group(function () {
-            Route::get('/', 'CurrentUserController@show')->name('currentUser');
+            Route::get('user', 'UserController@show')->name('auth.user.show');
+
+            Route::prefix('email')->namespace('Email')->group(function () {
+                Route::get('verify', 'VerificationController@index')->name('auth.email.verify.index');
+                Route::patch('verify', 'VerificationController@update')->name('auth.email.verify.update');
+            });
         });
     });
 
@@ -60,8 +64,22 @@ Route::middleware('api')->prefix('v1')->namespace('Api\V1')->group(function () {
     |
     |
     */
+    Route::middleware('auth:api')->group(function () {
+        Route::middleware('verified')->group(function () {
 
-    Route::middleware('verified')->group(function () {
+            Route::prefix('auth')->namespace('Auth')->group(function () {
+                Route::prefix('email')->namespace('Email')->group(function () {
+                    Route::get('change', 'ChangeController@index')->name('auth.email.change.index');
+                    Route::post('change', 'ChangeController@store')->name('auth.email.change.store');
+                    Route::patch('change', 'ChangeController@update')->name('auth.email.change.update');
+                    Route::delete('change', 'ChangeController@destroy')->name('auth.email.change.destroy');
+                });
 
+                Route::prefix('password')->namespace('Password')->group(function () {
+                    Route::patch('change', 'ChangeController@update')->name('auth.password.change.update');
+                });
+            });
+
+        });
     });
 });

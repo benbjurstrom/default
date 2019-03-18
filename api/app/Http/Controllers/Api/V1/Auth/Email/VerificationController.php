@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1\Auth;
+namespace App\Http\Controllers\Api\V1\Auth\Email;
 
 use App\Services\PasswordService;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
 
-class EmailVerificationController extends Controller
+class VerificationController extends Controller
 {
 
     /**
@@ -26,12 +26,11 @@ class EmailVerificationController extends Controller
     /**
      * Resend the email verification notification.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  PasswordService  $ps
      * @return \Illuminate\Http\Response
      * @throws \Throwable
      */
-    public function store(Request $request, PasswordService $ps)
+    public function index(PasswordService $ps)
     {
         $user = auth()->user();
         $ps->sendVerificationEmail($user);
@@ -43,12 +42,11 @@ class EmailVerificationController extends Controller
     /**
      * Mark the authenticated user's email address as verified.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  PasswordService  $ps
      * @return \Illuminate\Http\Response
      * @throws \Throwable
      */
-    public function update(Request $request, PasswordService $ps)
+    public function update(PasswordService $ps)
     {
         $user = auth()->user();
         if (!$user->hasVerifiedEmail() && $user->markEmailAsVerified()) {

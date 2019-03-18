@@ -74,8 +74,8 @@ class PasswordService
      * @param User $user
      * @return string
      */
-    protected function getEmailVerificationSignature(User $user) {
-        $route = URL::signedRoute('auth.email.verify', ['id' => $user->id]);
+    public function getEmailVerificationSignature(User $user) {
+        $route = URL::signedRoute('auth.email.verify.update', ['id' => $user->id]);
         return substr($route, strrpos($route, '=') + 1);
     }
 

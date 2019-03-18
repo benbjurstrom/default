@@ -6,7 +6,7 @@
   </div>
 </template>
 <script>
-import Unverified from '~/components/auth/Unverified'
+import Unverified from '~/components/auth/email/Unverified'
 export default {
   components: {
     Unverified

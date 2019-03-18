@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Mail;
+namespace App\Mail\Auth;
 
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use URL;
 
-class EmailVerification extends Mailable
+class EmailChangeVerification extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -42,11 +41,10 @@ class EmailVerification extends Mailable
      */
     public function build()
     {
-        $url = url(config('app.client_url') . '/auth/email/verify?signature=' . $this->signature);
-        return $this->subject('Verify Email Address')
-            ->markdown('emails.auth.verify')
+        return $this->subject('Email Change Verification')
+            ->markdown('emails.auth.email.change-verification')
             ->with([
-                'url' => $url
+                'url' => $this->signature
             ]);
     }
 }

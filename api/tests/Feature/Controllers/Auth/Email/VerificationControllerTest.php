@@ -1,29 +1,33 @@
 <?php
 
-namespace Tests\Feature\Controllers\Auth;
+namespace Tests\Feature\Controllers\Auth\Email;
 
+use App\Mail\EmailVerification;
 use App\Models\User;
+use App\Services\PasswordService;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use \Illuminate\Support\Facades\URL;
+use Mail;
 
-class EmailVerificationControllerTest extends TestCase
+class VerificationControllerTest extends TestCase
 {
     /**
      * POST
      */
     public function testStore()
     {
-        app()->make('config')->set('mail.driver', 'log');
+        Mail::fake();
         $user = factory(User::class)->create([
             'email_verified_at' => null
         ]);
 
         auth()->login($user);
 
-        $this->postJson(route('auth.email.resend'))
+        $this->getJson(route('auth.email.verify.index'))
             ->assertStatus(201);
+
+        Mail::assertQueued(EmailVerification::class);
     }
 
     /**
@@ -31,15 +35,20 @@ class EmailVerificationControllerTest extends TestCase
      */
     public function testVerifyWhereUnverified()
     {
+        $ps = new PasswordService();
+
         $user = factory(User::class)->create([
             'email_verified_at' => null
         ]);
         $this->assertFalse($user->hasVerifiedEmail());
 
         auth()->login($user);
-        $route = URL::signedRoute('auth.email.verify', ['id' => $user->id]);
+        $token = $ps->getEmailVerificationSignature($user);
 
-        $this->patchJson($route)
+        $this->patchJson(route('auth.email.verify.update', [
+            'signature' => $token,
+            'id'        => $user->id
+        ]))
             ->assertStatus(200);
 
         $this->assertTrue($user->refresh()->hasVerifiedEmail());

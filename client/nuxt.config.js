@@ -83,9 +83,9 @@ module.exports = {
     strategies: {
       local: {
         endpoints: {
-          login: { url: process.env.API_URL + '/v1/auth/login', method: 'post', propertyName: 'access_token' },
-          logout: { url: process.env.API_URL + '/v1/auth/logout', method: 'delete' },
-          user: { url: process.env.API_URL + '/v1/user', method: 'get', propertyName: 'data' }
+          login: { url: process.env.API_URL + '/v1/auth/token', method: 'post', propertyName: 'access_token' },
+          logout: { url: process.env.API_URL + '/v1/auth/token', method: 'delete' },
+          user: { url: process.env.API_URL + '/v1/auth/user', method: 'get', propertyName: 'data' }
         }
       }
     }

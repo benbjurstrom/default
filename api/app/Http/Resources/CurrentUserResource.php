@@ -18,6 +18,7 @@ class CurrentUserResource extends JsonResource
             'id'            => $this->id,
             'name'          => $this->name,
             'email'         => $this->email,
+            'email_pending' => $this->email_pending,
             'gravatar'      => md5($this->email),
             'verified'      => optional($this->email_verified_at)->toDateString(),
             'roles'         => $this->whenLoaded('roles', function () {

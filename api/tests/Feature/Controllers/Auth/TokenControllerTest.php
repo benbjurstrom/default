@@ -20,12 +20,31 @@ class TokenControllerTest extends TestCase
                 'password' => bcrypt($password)
             ]);
 
-        $this->postJson(route('auth.login'), [
+        $this->postJson(route('auth.token.store'), [
             'email' => $user->email,
             'password' => $password
         ])
             ->assertStatus(201)
             ->assertJsonStructure(['access_token', 'token_type', 'expires_in']);
+    }
+
+    /**
+     * POST
+     */
+    public function testStoreIncorrectPassword()
+    {
+        $password = str_random(12);
+        $user = factory(User::class)
+            ->create([
+                'password' => bcrypt($password)
+            ]);
+
+        $this->postJson(route('auth.token.store'), [
+                'email' => $user->email,
+                'password' => $password . '1'
+            ])
+            ->assertStatus(422)
+            ->assertJsonFragment(['email' => ['The provided credentials are incorrect']]);
     }
 
     /**
@@ -37,7 +56,7 @@ class TokenControllerTest extends TestCase
             ->create();
         auth()->login($user);
 
-        $this->patchJson(route('auth.refresh'))
+        $this->patchJson(route('auth.token.update'))
             ->assertStatus(200)
             ->assertJsonStructure(['access_token', 'token_type', 'expires_in']);
     }
@@ -53,7 +72,7 @@ class TokenControllerTest extends TestCase
 
         $this->assertNotNull(auth()->user());
 
-        $this->deleteJson(route('auth.logout'))
+        $this->deleteJson(route('auth.token.destroy'))
             ->assertStatus(204);
 
         $this->assertNull(auth()->user());

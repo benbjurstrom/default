@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1\User;
+namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CurrentUserResource;
 use Illuminate\Http\JsonResponse;
 
-class CurrentUserController extends Controller
+class UserController extends Controller
 {
     /**
      * Display the specified resource.
