@@ -9,7 +9,7 @@
         {{ user.email }}
       </i>
     </h3>
-    <article v-if="user.emailPending" class="message is-primary">
+    <article v-if="user.email_pending" class="message is-primary">
       <div class="message-header">
         <p>
           Email Change Pending
@@ -17,7 +17,7 @@
       </div>
       <div class="message-body content">
         <p>
-          A verification email has been sent to <i>{{ user.emailPending }}</i>. To complete the requested email change please follow the link in the email.
+          A verification email has been sent to <i>{{ user.email_pending }}</i>. To complete the requested email change please follow the link in the email.
         </p>
         <a class="button is-small" @click.prevent="resendChangeVerification">Resend Email</a>
         <a class="button is-small" @click.prevent="cancelChange">Cancel Request</a>
@@ -25,7 +25,7 @@
     </article>
     <form v-else @submit.prevent="requestChange">
       <b-field
-        label="Email"
+        label="New Email"
         :type="{'is-danger': errors.has('email')}"
         :message="errors.first('email')"
       >
@@ -68,10 +68,10 @@ export default {
     }
   },
   computed: {
-    ...mapState('user', {
-      user: state => state.data
+    ...mapState('auth', {
+      user: state => state.user
     }),
-    ...mapFields('user', [
+    ...mapFields('auth/email', [
       'form.email',
       'form.password'
     ])
@@ -83,6 +83,8 @@ export default {
           container: this.$el,
           validator: this.$validator
         })
+
+        await this.$auth.fetchUser()
       } catch (e) {
         console.log(e)
       }
@@ -109,10 +111,7 @@ export default {
           validator: this.$validator
         })
 
-        this.$toast.open({
-          message: 'Success! The email change request has been canceled.',
-          type: 'is-success'
-        })
+        await this.$auth.fetchUser()
       } catch (e) {
         console.log(e)
       }

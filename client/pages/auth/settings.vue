@@ -5,18 +5,18 @@
         <ChangeEmail />
       </section>
       <section class="section">
-        <!--<ChangePassword />-->
+        <ChangePassword />
       </section>
     </div>
   </div>
 </template>
 <script>
 import ChangeEmail from '~/components/auth/email/Change'
-// import ChangePassword from '~/components/auth/ChangePassword'
+import ChangePassword from '~/components/auth/password/Change'
 export default {
   components: {
-    ChangeEmail
-    // ChangePassword
+    ChangeEmail,
+    ChangePassword
   },
   async fetch ({ store }) {
     await store.dispatch('user/get')

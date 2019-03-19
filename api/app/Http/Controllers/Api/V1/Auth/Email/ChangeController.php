@@ -29,24 +29,17 @@ class ChangeController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return JsonResponse
      * @throws
      */
-    public function index(Request $request)
+    public function index(AuthService $as)
     {
         $user = auth()->user();
-
         throw_unless($user->email_pending, ValidationException::withMessages([
             'email_pending'    => ['There is no pending email change request.']
         ]));
 
-        $url = URL::signedRoute('emailChangeVerification', [
-            'id' => $user->id,
-            'email_pending' => $user->email_pending
-        ]);
-
-        Mail::to($user)->queue(new EmailChangeVerification($user, $url));
+        $as->sendEmailChangeVerification($user);
 
         return (new CurrentUserResource($user))
             ->response()
@@ -57,24 +50,18 @@ class ChangeController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  AuthService  $as
      * @return JsonResponse
      * @throws
      */
-    public function store(Request $request)
+    public function store(Request $request, AuthService $as)
     {
         $data = $this->validate($request, [
-            'email'     => 'required|string|email|max:255|unique:users',
+            'email'     => 'required|email|max:255',
             'password'  => 'required|string|min:3',
         ]);
 
-        $user = auth()->user();
-        throw_unless(Hash::check($data['password'], $user->password), ValidationException::withMessages([
-            'password'    => ['The given credentials are incorrect']
-        ]));
-
-        $user->email_pending = $data['email'];
-        $user->save();
+        $user = $as->emailChangeRequest($data['email'], $data['password']);
 
         return (new CurrentUserResource($user))
             ->response()

@@ -24,7 +24,7 @@ class ChangeControllerTest extends TestCase
         $this->assertFalse(Hash::check($password_new, $user->password));
 
         $this->patchJson(route('auth.password.change.update'), [
-                'password_old' => $password_old,
+                'password' => $password_old,
                 'password_new' => $password_new,
                 'password_new_confirmation' => $password_new
             ]

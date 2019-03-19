@@ -13,9 +13,9 @@ export default function ({ $axios }) {
       throw new axios.Cancel('Client validation failed.')
     }
 
-    // show loader by default
-    if (_.get(config, 'loader' === false)) {
-      return
+    // skip loader only if specified as false
+    if (_.get(config, 'container') === false) {
+      return config
     }
 
     loading = Vue.prototype.$loading.open({
@@ -30,6 +30,11 @@ export default function ({ $axios }) {
     response => {
       if (loading) {
         loading.close()
+      }
+
+      const validator = _.get(response, 'config.validator')
+      if (validator) {
+        validator.errors.clear()
       }
 
       return response

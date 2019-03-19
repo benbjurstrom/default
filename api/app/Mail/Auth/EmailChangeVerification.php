@@ -20,18 +20,18 @@ class EmailChangeVerification extends Mailable
     /**
      * @var string
      */
-    protected $signature;
+    protected $route;
 
     /**
      * Create a new message instance.
      * @param User $user
-     * @param string $signature
+     * @param string $route
      * @return void
      */
-    public function __construct(User $user, $signature)
+    public function __construct(User $user, $route)
     {
         $this->user  = $user;
-        $this->signature = $signature;
+        $this->route = $route;
     }
 
     /**
@@ -41,10 +41,11 @@ class EmailChangeVerification extends Mailable
      */
     public function build()
     {
+        $url = url(config('app.client_url') . '/auth/email/change?route=' . base64_encode($this->route));
         return $this->subject('Email Change Verification')
             ->markdown('emails.auth.email.change-verification')
             ->with([
-                'url' => $this->signature
+                'url' => $url
             ]);
     }
 }

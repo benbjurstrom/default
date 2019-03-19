@@ -18,49 +18,31 @@ export default {
     async verify ({ commit, state, dispatch }, config) {
       await this.$axios.patch('v1/auth/email/verify', {
         ...state.form
-      })
-      await dispatch('get')
+      }, config)
     },
     async resendVerification ({ commit, state }, config) {
-      await this.$axios.get('v1/auth/email/verify', {
-        ...state.form
-      })
+      await this.$axios.get('v1/auth/email/verify', config)
     },
     async requestChange ({ commit, state }, config) {
-      const { data } = await this.$axios.post('v1/auth/email/change', {
+      await this.$axios.post('v1/auth/email/change', {
         ...state.form
-      })
-      commit('SET', data)
+      }, config)
     },
     async resendChangeVerification ({ commit, state }, config) {
-      await this.$axios.get('v1/auth/email/change', {
-        ...state.form
-      })
+      await this.$axios.get('v1/auth/email/change', config)
     },
     async verifyChange ({ commit, state, dispatch }, config) {
-      await this.$axios.delete('v1/auth/email/change', {
+      await this.$axios.patch('v1/auth/email/change', {
         ...state.form
-      })
-      await dispatch('get')
+      }, config)
     },
     async cancelChange ({ commit, state, dispatch }, config) {
       await this.$axios.delete('v1/auth/email/change', {
         ...state.form
-      })
-      await dispatch('get')
+      }, config)
     }
   },
   mutations: {
-    SET: (state, data) => {
-      state.data.id = data.data.id
-      state.data.name = data.data.name
-      state.data.email = data.data.email
-      state.data.emailPending = data.data.email_pending
-      state.data.gravatar = data.data.gravatar
-    },
-    RESET (state) {
-      Object.assign(state, JSON.parse(JSON.stringify(initialState)))
-    },
     RESET_FORM (state) {
       Object.assign(state.form, initialState.form)
     },

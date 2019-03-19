@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="changePassword">
+  <form ref="element" @submit.prevent="changePassword">
     <h2 class="title is-4">
       Change Password
     </h2>
@@ -7,41 +7,41 @@
       Password must be at least 15 characters or 8 characters with one number and one special character
     </h3>
     <b-field
-      label="Old password"
-      :type="{'is-danger': errors.has('current_password')}"
-      :message="errors.first('current_password')"
+      label="Current password"
+      :type="{'is-danger': errors.has('password')}"
+      :message="errors.first('password')"
     >
       <b-input
-        v-model="form.current"
+        v-model="password"
         v-validate="'required|min:3'"
         type="password"
-        name="current_password"
+        name="password"
         password-reveal
       />
     </b-field>
     <b-field
       label="New Password"
-      :type="{'is-danger': errors.has('password')}"
-      :message="errors.first('password')"
+      :type="{'is-danger': errors.has('password_new')}"
+      :message="errors.first('password_new')"
     >
       <b-input
-        v-model="form.new"
+        v-model="password_new"
         v-validate="'required|min:3'"
         type="password"
-        name="password"
+        name="password_new"
         password-reveal
       />
     </b-field>
     <b-field
       label="Confirm New Password"
-      :type="{'is-danger': errors.has('password')}"
-      :message="errors.first('password')"
+      :type="{'is-danger': errors.has('password_new_confirmation')}"
+      :message="errors.first('password_new_confirmation')"
     >
       <b-input
-        v-model="form.confirm"
+        v-model="password_new_confirmation"
         v-validate="'required|min:3'"
         type="password"
-        name="password"
+        name="password_new_confirmation"
         password-reveal
       />
     </b-field>
@@ -59,34 +59,34 @@
   </form>
 </template>
 <script>
+import { mapFields } from 'vuex-map-fields'
 import { mapState } from 'vuex'
 export default {
   data () {
     return {
-      form: {
-        current: null,
-        new: null,
-        confirm: null
-      }
+      //
     }
   },
   computed: {
+    ...mapFields('auth/password', [
+      'form.password',
+      'form.password_new',
+      'form.password_new_confirmation'
+    ]),
     ...mapState('auth', ['user'])
   },
   methods: {
     async changePassword () {
       try {
-        await this.$store.dispatch('user/updatePassword', {
+        await this.$store.dispatch('auth/password/change', {
           container: this.$el,
           validator: this.$validator
         })
 
-        await this.$auth.loginWith('local', { data: this.form },
-          {
-            container: this.$el,
-            validator: this.$validator
-          })
-        this.$router.push('/')
+        this.$toast.open({
+          message: 'Success! Your password has been updated.',
+          type: 'is-success'
+        })
       } catch (e) {
         console.log(e)
       }
