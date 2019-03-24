@@ -4,6 +4,30 @@ $link: #F14625 !default;
 $link-focus-border: $primary !default;
 $input-focus-border-color: $primary !default;
 $input-focus-box-shadow-color: rgba($primary, 0.25) !default
+$footer-padding-size:	2rem 1.5rem 2rem;
 
 @import "../../node_modules/bulma";
 @import "../../node_modules/buefy/src/scss/buefy";
+
+
+/*
+|--------------------------------------------------------------------------
+| Sticky Footer
+|--------------------------------------------------------------------------
+|
+| https://github.com/jgthms/bulma/issues/47#issuecomment-390160308
+|
+*/
+
+.site {
+  display: flex;
+  // min-height: calc(100vh - #{$navbar-height});
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.site-content {
+  flex: 1;
+}
+
+

@@ -18,7 +18,9 @@ class ChangeControllerTest extends TestCase
         $password_old = str_random(10);
         $password_new = str_random(10);
 
-        $user = factory(User::class)->create(['password' => bcrypt($password_old)]);
+        $user = factory(User::class)
+            ->states(['withAgreements'])
+            ->create(['password' => bcrypt($password_old)]);
         auth()->login($user);
 
         $this->assertFalse(Hash::check($password_new, $user->password));

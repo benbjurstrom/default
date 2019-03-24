@@ -32,6 +32,20 @@
           password-reveal
         />
       </b-field>
+      <b-field
+        label=""
+        :type="{'is-danger': errors.has('terms')}"
+        :message="{'Please check this box to proceed' : errors.firstByRule('terms', 'required')}"
+      >
+        <b-checkbox
+          v-model="form.terms"
+          v-validate="'required:false'"
+          name="terms"
+          size="is-small"
+        >
+          I accept the <a href="#" @click.prevent="">privacy policy</a> and <a href="#" @click.prevent="">terms of use</a>
+        </b-checkbox>
+      </b-field>
       <div class="level">
         <div class="level-left">
           <button
@@ -55,19 +69,32 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
   data () {
     return {
       form: {
         name: null,
         email: null,
-        password: null
+        password: null,
+        terms: true,
+        agreements: {
+          privacy: null,
+          terms: null
+        }
       }
     }
+  },
+  computed: {
+    ...mapState('auth/agreements', {
+      agreements: 'data'
+    })
   },
   methods: {
     async register () {
       try {
+        this.form.agreements.privacy = this.agreements.privacy.sha
+        this.form.agreements.terms = this.agreements.terms.sha
         await this.$axios.post('/v1/auth/register', this.form, {
           container: this.$el,
           validator: this.$validator

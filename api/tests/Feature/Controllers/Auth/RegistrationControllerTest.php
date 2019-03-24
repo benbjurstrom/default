@@ -24,9 +24,14 @@ class RegistrationControllerTest extends TestCase
         ]);
 
         $this->postJson(route('auth.register'), [
-            'name' => $user->name,
-            'email' => $user->email,
-            'password' => $password
+            'name'          => $user->name,
+            'email'         => $user->email,
+            'password'      => $password,
+            'terms'         => true,
+            'agreements'    => [
+                'privacy'   => 'fb16d59f04146c120200640ab11f04abc651ed1f',
+                'terms'     => '99be19567be21c4d1034baa834432fe5f2306afe'
+            ],
         ])->assertStatus(201);
 
         $this->assertDatabaseHas('users', [

@@ -13,7 +13,7 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         $user = factory(User::class)
-            ->states(['withRoles'])
+            ->states(['withRoles', 'withAgreements'])
             ->create([
                 'email' => 'user@test.com',
                 'password' => bcrypt('123')

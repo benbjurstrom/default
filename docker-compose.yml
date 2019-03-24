@@ -18,7 +18,7 @@ services:
       container_name: default-redis
       command: redis-server /usr/local/etc/redis/redis.conf
       volumes:
-        - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+        - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
       ports:
         - "6378:6379"
       command: >

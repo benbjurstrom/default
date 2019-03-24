@@ -4,6 +4,7 @@ use Illuminate\Support\Str;
 use Faker\Generator as Faker;
 use App\Models\User;
 use App\Models\Role;
+use App\Models\UserAgreement;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,5 +38,24 @@ $factory->state(User::class, 'withRoles', [])
         $roles->each(function($role) use ($user) {
             $user->assignRole($role);
         });
+
+    });
+
+$factory->state(User::class, 'withAgreements', [])
+    ->afterCreatingState(User::class, 'withAgreements', function ($user, $faker) {
+
+        // terms agreement
+        factory(UserAgreement::class)
+            ->create([
+                'user_id' => $user->id,
+                'sha' => '99be19567be21c4d1034baa834432fe5f2306afe'
+            ]);
+
+        // privacy agreement
+        factory(UserAgreement::class)
+            ->create([
+                'user_id' => $user->id,
+                'sha' => 'fb16d59f04146c120200640ab11f04abc651ed1f'
+            ]);
 
     });

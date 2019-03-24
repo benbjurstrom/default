@@ -2,16 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use BenBjurstrom\EloquentPostgresUuids\HasUuid;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Model;
 
-class AdminUser extends Authenticatable
+class UserAgreement extends Model
 {
-    use Notifiable, HasUuid, HasRoles;
-    //
+    use HasUuid;
 
     /*
     |--------------------------------------------------------------------------
@@ -42,4 +38,5 @@ class AdminUser extends Authenticatable
     */
 
     //
+
 }

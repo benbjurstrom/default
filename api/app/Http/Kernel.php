@@ -43,6 +43,12 @@ class Kernel extends HttpKernel
             'bindings',
             \Spatie\Cors\Cors::class
         ],
+
+        'valid' => [
+            'auth:api',
+            'verified',
+            \App\Http\Middleware\AcceptedAgreements::class
+        ],
     ];
 
     /**

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="site">
     <nav
       class="navbar header"
       role="navigation"
@@ -36,13 +36,25 @@
       </div>
     </nav>
 
-    <section class="main-content columns">
-      <div class="container column is-10">
-        <section class="section">
-          <nuxt />
-        </section>
+    <div class="site-content">
+      <section class="main-content columns">
+        <div class="container column is-10">
+          <section class="section">
+            <nuxt />
+          </section>
+        </div>
+      </section>
+    </div>
+
+    <footer class="footer">
+      <div class="content has-text-centered">
+        <p>
+          <a href="">Terms of Use</a> &#183;
+          <a href="">Privacy Policy</a> <br>
+          &copy; {{ year }}
+        </p>
       </div>
-    </section>
+    </footer>
   </div>
 </template>
 
@@ -53,6 +65,11 @@ export default {
   data () {
     return {
       showNav: false
+    }
+  },
+  computed: {
+    year () {
+      return new Date().getFullYear()
     }
   }
 }

@@ -18,7 +18,9 @@ class ChangeControllerTest extends TestCase
         $email = $this->faker->email;
         $password = str_random(10);
 
-        $user = factory(User::class)->create(['password' => bcrypt($password)]);
+        $user = factory(User::class)
+            ->states(['withAgreements'])
+            ->create(['password' => bcrypt($password)]);
         auth()->login($user);
 
         $this->postJson(route('auth.email.change.store'), [
@@ -40,7 +42,9 @@ class ChangeControllerTest extends TestCase
     public function testUpdate()
     {
         $email = $this->faker->email;
-        $user  = factory(User::class)->create(['email_pending' => $email]);
+        $user  = factory(User::class)
+            ->states(['withAgreements'])
+            ->create(['email_pending' => $email]);
         auth()->login($user);
 
         $route = URL::signedRoute('auth.email.change.update', [

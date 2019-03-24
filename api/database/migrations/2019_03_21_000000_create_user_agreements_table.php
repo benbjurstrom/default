@@ -16,8 +16,11 @@ class CreateUserAgreementsTable extends Migration
         Schema::create('user_agreements', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('user_id');
-            $table->char('hash', 40);
+            $table->char('sha', 40);
+            $table->ipAddress('ip');
             $table->timestamps();
+
+            $table->index(['user_id', 'sha']);
         });
     }
 
