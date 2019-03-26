@@ -3,7 +3,6 @@ stages:
 - test
 
 services:
-- docker:dind
 - postgres:11.0
 - redis:latest
 
@@ -11,8 +10,6 @@ variables:
   # CI_REGISTRY_USER: benbjurstrom
   # CI_REGISTRY_PASSWORD: password
   # $CI_REGISTRY:
-  DOCKER_DRIVER: overlay2
-  DOCKER_HOST: tcp://docker:2375  # required since we use dind
   SERVICE_ACCOUNT: /etc/deploy/sa.json
   POSTGRES_DB: default
   POSTGRES_USER: postgres
@@ -26,7 +23,6 @@ build:api:
   stage: build
   image: docker:stable
   services:
-  - docker:dind
   - redis:latest
   script:
   - export
