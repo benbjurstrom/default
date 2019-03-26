@@ -5,27 +5,33 @@ stages:
 services:
 - docker:dind
 - postgres:11.0
+- redis:latest
 
 variables:
   # CI_REGISTRY_USER: benbjurstrom
   # CI_REGISTRY_PASSWORD: password
   # $CI_REGISTRY:
   DOCKER_DRIVER: overlay2
-  DOCKER_HOST: tcp://docker:2375  # required since we use dind
+  # DOCKER_HOST: tcp://docker:2375  # required since we use dind
   SERVICE_ACCOUNT: /etc/deploy/sa.json
   POSTGRES_DB: default
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
+  BUILD: ${CI_COMMIT_REF_SLUG}_${CI_COMMIT_SHA}
+
+before_script:
+  - docker info
 
 build:api:
   stage: build
   image: docker:stable
   services:
   - docker:dind
+  - redis:latest
   script:
   - echo "Building Dockerfile-based application..."
   - cd api
-  - docker build -t $CI_REGISTRY_IMAGE default-api --cache-from default-api:latest .
-  - echo $CI_REGISTRY_PASSWORD | docker login --username=$CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+  - docker build -t ${CI_REGISTRY_IMAGE}-api:${BUILD} --cache-from ${CI_REGISTRY_IMAGE}-api:latest .
+  - echo ${CI_REGISTRY_PASSWORD} | docker login --username=${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
   - echo "Pushing to the Container Registry..."
-  - docker push $CI_REGISTRY_IMAGE-api:$CI_COMMIT_REF_SLUG_$CI_COMMIT_SHA
+  - docker push ${CI_REGISTRY_IMAGE}-api:${BUILD}

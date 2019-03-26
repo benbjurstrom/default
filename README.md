@@ -21,16 +21,13 @@ For the client view navigate to http://localhost:3000 and login with user@test.c
 
 ## Overview
 At the root of the project you will find the following file structure
-├── api
-
-├── client
-
-├── docker
-
+```shell
+├── api/
+├── client/
+├── docker/
 ├── docker-compose.yml
-
 └── install.sh
-
+```
 
 ### Api
 Within the api folder is a preconfigured [Laravel](https://laravel.com/) install with  API endpoints added for login, registration, and password management.
