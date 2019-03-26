@@ -12,7 +12,7 @@ variables:
   # CI_REGISTRY_PASSWORD: password
   # $CI_REGISTRY:
   DOCKER_DRIVER: overlay2
-  # DOCKER_HOST: tcp://docker:2375  # required since we use dind
+  DOCKER_HOST: tcp://docker:2375  # required since we use dind
   SERVICE_ACCOUNT: /etc/deploy/sa.json
   POSTGRES_DB: default
   POSTGRES_USER: postgres
@@ -29,6 +29,7 @@ build:api:
   - docker:dind
   - redis:latest
   script:
+  - export
   - echo "Building Dockerfile-based application..."
   - cd api
   - docker build -t ${CI_REGISTRY_IMAGE}-api:${BUILD} --cache-from ${CI_REGISTRY_IMAGE}-api:latest .
